@@ -60,11 +60,10 @@ RUN pip install --prefer-binary -U --no-cache-dir opencv-python-headless
 ENV TRANSFORMERS_CACHE=/cache/transformers TORCH_HOME=/cache/torch CLI_ARGS=""
 
 COPY . /docker
-RUN chmod +x /docker/mount.sh && python3 /docker/info.py ${ROOT}/modules/ui.py
+RUN python3 /docker/info.py ${ROOT}/modules/ui.py
 
 
 WORKDIR ${WORKDIR}
 EXPOSE 8080
 # run, -u to not buffer stdout / stderr
-CMD /docker/mount.sh && \
-  python3 -u ../../webui.py --listen --port 8080 --hide-ui-dir-config --ckpt-dir /cache/custom-models --ckpt /cache/models/model.ckpt --no-half --precision full
+CMD python3 -u ../../webui.py --listen --port 8080 --hide-ui-dir-config --ckpt-dir /cache/custom-models --ckpt /cache/models/model.ckpt --no-half --precision full
