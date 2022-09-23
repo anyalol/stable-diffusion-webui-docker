@@ -47,17 +47,19 @@ ENV ROOT=/stable-diffusion-webui \
 
 
 COPY --from=download /git/ ${ROOT}
+COPY --from=download /cache/ ${ROOT}
 RUN pip install --prefer-binary --no-cache-dir -r ${ROOT}/repositories/CodeFormer/requirements.txt
 
 # Note: don't update the sha of previous versions because the install will take forever
 # instead, update the repo state in a later step
 
-ARG SHA=d6fd71f36f33763f3a8d1d98f815e1e6a979e13e
+ARG SHA=79e7c392989ad70a1c02cbfe6eb38ee5a78bdbce
 RUN <<EOF
 cd stable-diffusion-webui
 git pull --rebase
 git reset --hard ${SHA}
 pip install --prefer-binary --no-cache-dir -r requirements.txt
+pip install --prefer-binary --no-cache-dir -r requirements_versions.txt
 EOF
 
 RUN pip install --prefer-binary -U --no-cache-dir opencv-python-headless
@@ -72,4 +74,4 @@ WORKDIR ${WORKDIR}
 EXPOSE 8080
 # run, -u to not buffer stdout / stderr
 CMD /docker/mount.sh && \
-  python3 -u ../../webui.py --listen --port 8080 --hide-ui-dir-config --ckpt-dir /cache/custom-models --ckpt /cache/models/model.ckpt --no-half --precision full
+  python3 -u ../../webui.py --listen --port 8080 --hide-ui-dir-config --ckpt-dir /cache/custom-models --ckpt /cache/models/model.ckpt --gfpgan-model /cache/models/GFPGANv1.3.pth --no-half --precision full
