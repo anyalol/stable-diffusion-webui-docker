@@ -47,7 +47,7 @@ ENV ROOT=/stable-diffusion-webui \
 
 
 COPY --from=download /git/ ${ROOT}
-COPY --from=download /cache/ ${ROOT}
+COPY --from=download /cache ./cache
 RUN pip install --prefer-binary --no-cache-dir -r ${ROOT}/repositories/CodeFormer/requirements.txt
 
 # Note: don't update the sha of previous versions because the install will take forever
