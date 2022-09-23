@@ -3,7 +3,7 @@
 FROM alpine/git:2.36.2 as download
 
 RUN apk add parallel aria2
-COPY . /docker
+COPY checksums.sha256 download.sh links.txt /docker
 RUN chmod +x /docker/download.sh
 RUN bash /docker/download.sh
 
