@@ -2,6 +2,10 @@
 
 FROM alpine/git:2.36.2 as download
 
+RUN apk add parallel aria2
+COPY checksums.sha256 download.sh links.txt /docker
+RUN chmod +x /docker/download.sh
+RUN bash /docker/download.sh
 
 RUN git clone https://github.com/CompVis/stable-diffusion.git repositories/stable-diffusion && cd repositories/stable-diffusion && git reset --hard 69ae4b35e0a0f6ee1af8bb9a5d0016ccb27e36dc
 
@@ -47,7 +51,7 @@ RUN pip install --prefer-binary --no-cache-dir -r ${ROOT}/repositories/CodeForme
 # Note: don't update the sha of previous versions because the install will take forever
 # instead, update the repo state in a later step
 
-ARG SHA=5a1951f17567022612aef5302fb650923a06fb54
+ARG SHA=d6fd71f36f33763f3a8d1d98f815e1e6a979e13e
 RUN <<EOF
 cd stable-diffusion-webui
 git pull --rebase
