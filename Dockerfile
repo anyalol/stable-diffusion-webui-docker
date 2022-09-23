@@ -1,13 +1,11 @@
-FROM bash:alpine3.15
-
-RUN apk add parallel aria2
-COPY checksums.sha256 download.sh links.txt /docker
-RUN chmod +x /docker/download.sh
-RUN bash /docker/download.sh
-
 # syntax=docker/dockerfile:1
 
 FROM alpine/git:2.36.2 as download
+
+RUN apk update && apk add parallel aria2 bash
+COPY checksums.sha256 download.sh links.txt /docker
+RUN chmod +x /docker/download.sh
+RUN bash /docker/download.sh
 
 RUN git clone https://github.com/CompVis/stable-diffusion.git repositories/stable-diffusion && cd repositories/stable-diffusion && git reset --hard 69ae4b35e0a0f6ee1af8bb9a5d0016ccb27e36dc
 
